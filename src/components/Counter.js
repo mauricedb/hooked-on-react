@@ -5,13 +5,13 @@ function useTime(interval = 1000) {
 
   useEffect(
     () => {
-      console.log('setInterval 2');
+      // console.log('setInterval 2');
       const handle = setInterval(
         () => setTime(new Date().toLocaleTimeString()),
         interval
       );
       return () => {
-        console.log('clearInterval 2');
+        // console.log('clearInterval 2');
         clearInterval(handle);
       };
     },
@@ -25,20 +25,23 @@ function useTimedCounter(interval = 1000) {
   const [count, setCount] = useState(0);
   useEffect(
     () => {
-      const handle = setTimeout(() => setCount(count + 1), interval);
+      console.log('setInterval useTimedCounter');
+
+      const handle = setInterval(() => setCount(c => c + 1), interval);
+
       return () => {
-        console.log('clearTimeout 1');
-        clearTimeout(handle);
+        console.log('clearInterval useTimedCounter');
+        clearInterval(handle);
       };
     },
-    [count]
+    [interval]
   );
 
   return [count, () => setCount(count + 10), () => setCount(count - 10)];
 }
 
 const Counter = () => {
-  const [interval, setInterval] = useState(1000 * 5);
+  const [interval, setInterval] = useState(1000 * 2);
   const [count, increment, decrement] = useTimedCounter(interval);
   const time = useTime();
 
