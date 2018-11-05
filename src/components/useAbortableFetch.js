@@ -32,13 +32,12 @@ const useAbortableFetch = url => {
   useEffect(
     () => {
       const controller = new AbortController();
-      setState(oldState => ({
-        ...oldState,
+      setState({
         json: null,
         loading: true,
         error: null,
         controller
-      }));
+      });
 
       fetchData(url, controller.signal, setState);
 
