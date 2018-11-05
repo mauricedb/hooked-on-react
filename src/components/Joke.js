@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useAbortableFetch from './useAbortableFetch';
 
 const Joke = () => {
-  const [joke, loading, error, abort] = useAbortableFetch(
+  const { json: joke, loading, error, abort } = useAbortableFetch(
     'http://api.icndb.com/jokes/random/?limitTo=[nerdy]&escape=javascript'
   );
-
-  setTimeout(() => abort(), 10);
 
   if (loading) return 'Loading...';
   if (error) return 'Error: ' + error;
