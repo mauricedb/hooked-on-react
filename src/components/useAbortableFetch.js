@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 
 const fetchData = async (url, signal, setState) => {
   try {
@@ -29,6 +29,14 @@ const useAbortableFetch = url => {
     controller: null
   });
 
+  const isMounted = useRef(false);
+  useLayoutEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   useEffect(
     () => {
       const controller = new AbortController();
@@ -39,7 +47,11 @@ const useAbortableFetch = url => {
         controller
       });
 
-      fetchData(url, controller.signal, setState);
+      fetchData(url, controller.signal, state => {
+        if (isMounted.current) {
+          setState(state);
+        }
+      });
 
       return () => controller.abort();
     },
