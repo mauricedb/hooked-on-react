@@ -11,25 +11,36 @@ function useCalculator() {
 
   return {
     result: stack[0] || 0,
-    stack,
+    stack: stack.map(v => +v || 0),
     append(digit) {
-      const [current, ...rest] = stack;
+      let [current, ...rest] = stack;
+      if (stack.pushValue) {
+        rest = [current, ...rest];
+        current = 0;
+      } else if (stack.replaceValue) {
+        current = 0;
+      }
 
       if (current) {
-        setStack([+`${current}${digit}`, ...rest]);
+        setStack([`${current}${digit}`, ...rest]);
       } else {
-        const value = +digit;
+        const value = `${digit}`;
         setStack([value, ...rest]);
       }
     },
     push() {
-      setStack([0, ...stack]);
+      let [current, ...rest] = stack;
+      const newStack = [current, current, ...rest];
+      newStack.replaceValue = true;
+      setStack(newStack);
     },
     calculate(fn) {
       const [y, x, ...rest] = stack;
       if (x) {
-        const result = fn(x, y);
-        setStack([result, ...rest]);
+        const result = fn(+x || 0, +y || 0);
+        const newStack = [result, ...rest];
+        newStack.pushValue = true;
+        setStack(newStack);
       }
     }
   };
@@ -52,6 +63,7 @@ const Calculator = () => {
         <button onClick={() => append(8)}>8</button>
         <button onClick={() => append(9)}>9</button>
         <button onClick={() => append(0)}>0</button>
+        <button onClick={() => append('.')}>.</button>
       </div>
 
       <div>

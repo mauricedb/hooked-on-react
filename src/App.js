@@ -3,7 +3,7 @@ import './App.css';
 
 import Clock from './components/Counter';
 import WindowSize from './components/WindowSize';
-// import Calculator from './components/Calculator'
+import Calculator from './components/Calculator'
 import Joke from './components/Joke';
 import AnalogClock from './components/AnalogClock/index';
 
@@ -18,7 +18,7 @@ class App extends Component {
           <WindowSize />
           <Joke />
           <AnalogClock />
-          {/* <Calculator /> */}
+          <Calculator />
         </TimeContextProvider>
       </div>
     );
